@@ -67,7 +67,7 @@ public class GetStep extends BaseStep
             result.success = false;
             result.failure_message = e.getMessage();
             context.setVariable(result_name, result);
-            return new BasicStepExecutionResult(StepExecutionStatus.FAILURE, "Unable to execute GET " + url);
+            return new BasicStepExecutionResult(StepExecutionStatus.FAILURE, "Unable to execute GET due to: " + result.failure_message);
             }
         finally
             {
