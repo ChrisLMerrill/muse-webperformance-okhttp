@@ -14,7 +14,7 @@ import org.musetest.core.values.descriptor.*;
 @MuseStepName("Create HTTP client")
 @MuseInlineEditString("Create client using {factory}")
 @MuseStepIcon("glyph:Icons525:GLOBE_2")
-@MuseStepTypeGroup("HTTP")
+@MuseStepTypeGroup("OkHttp")
 @MuseStepShortDescription("Create a client")
 @MuseStepLongDescription("Create an HTTP Client, using the 'factory' parameter to determine the client properties.")
 @MuseSubsourceDescriptor(displayName = "Factory", description = "Factory to be used in creatng the client. Must resolve to an HTTP Client Factory", type = SubsourceDescriptor.Type.Named, name = CreateClientStep.FACTORY_PARAM)

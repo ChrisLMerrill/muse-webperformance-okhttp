@@ -17,7 +17,7 @@ import java.io.*;
 @MuseStepName("GET a URL")
 @MuseInlineEditString("Get {url}")
 @MuseStepIcon("glyph:Icons525:GLOBE_2")
-@MuseStepTypeGroup("HTTP")
+@MuseStepTypeGroup("OkHttp")
 @MuseStepShortDescription("Get the URL")
 @MuseStepLongDescription("The 'url' source is resolved to a string and used to retrive a resource via HTTP")
 @MuseSubsourceDescriptor(displayName = "URL", description = "URL to get", type = SubsourceDescriptor.Type.Named, name = GetStep.URL_PARAM)

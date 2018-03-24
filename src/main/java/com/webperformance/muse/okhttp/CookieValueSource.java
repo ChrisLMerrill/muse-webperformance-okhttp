@@ -12,7 +12,7 @@ import org.musetest.core.values.descriptor.*;
  */
 @MuseTypeId("wpi-okhttp-cookie-value")
 @MuseValueSourceName("Cookie Value")
-@MuseValueSourceTypeGroup("HTTP")
+@MuseValueSourceTypeGroup("OkHttp")
 @MuseValueSourceShortDescription("Get the named cookie")
 @MuseValueSourceLongDescription("Resolves the {name} source. Returns the value of the cookie or null if it does not exist.")
 @MuseStringExpressionSupportImplementation(CookieValueSource.CookieValueSourceStringExpressionSupport.class)
