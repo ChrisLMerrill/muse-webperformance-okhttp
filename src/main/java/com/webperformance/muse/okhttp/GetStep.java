@@ -80,10 +80,14 @@ public class GetStep extends BaseStep
     private final MuseValueSource _client_source;
     private final MuseValueSource _result_name_source;
 
-    final static String URL_PARAM = "url";
+    @SuppressWarnings({"unused","WeakerAccess"})
+    public final static String URL_PARAM = "url";
     final static String RESULT_NAME_PARAM = "response";
     final static String CLIENT_PARAM = "client";
     private final static String DEFAULT_RESULT_NAME = "result";
+
+    @SuppressWarnings("unused")
+    public final static String TYPE_ID = GetStep.class.getAnnotation(MuseTypeId.class).value();
     }
 
 

@@ -46,8 +46,12 @@ public class CreateClientStep extends BaseStep
     private final MuseValueSource _factory_source;
     private final MuseValueSource _name_source;
 
-    final static String FACTORY_PARAM = "factory";
-    final static String CLIENT_NAME_PARAM = "client";
+    @SuppressWarnings({"unused", "WeakerAccess"})
+    public final static String FACTORY_PARAM = "factory";
+    @SuppressWarnings({"unused", "WeakerAccess"})
+    public final static String CLIENT_NAME_PARAM = "client";
+    @SuppressWarnings({"unused", "WeakerAccess"})
+    public final static String TYPE_ID = CreateClientStep.class.getAnnotation(MuseTypeId.class).value();
     }
 
 
