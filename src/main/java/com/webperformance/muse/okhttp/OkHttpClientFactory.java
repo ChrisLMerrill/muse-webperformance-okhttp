@@ -2,6 +2,7 @@ package com.webperformance.muse.okhttp;
 
 import okhttp3.*;
 import org.musetest.core.*;
+import org.musetest.core.events.*;
 import org.musetest.core.resource.*;
 import org.musetest.core.resource.types.*;
 import org.slf4j.*;
@@ -23,11 +24,16 @@ public class OkHttpClientFactory extends BaseMuseResource
 
     public OkHttpClient createClient(MuseExecutionContext context)
         {
-        final OkHttpClient client = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .cookieJar(new CookieStore())
             .followRedirects(false)
-            .followSslRedirects(false)
-            .build();
+            .followSslRedirects(false);
+        if (_log_transactions)
+            {
+            builder = builder.addInterceptor(createLogger());
+            _context = context;
+            }
+        final OkHttpClient client = builder.build();
         context.registerShuttable(() ->
             {
             client.dispatcher().executorService().shutdown();
@@ -45,6 +51,35 @@ public class OkHttpClientFactory extends BaseMuseResource
             });
         return client;
         }
+
+    private Interceptor createLogger()
+        {
+        return chain ->
+            {
+            Request request = chain.request();
+            String message = String.format("Sending request: %s %s\n%s", request.method(), request.url().encodedPath(), request.headers());
+            _context.raiseEvent(MessageEventType.create(message));
+
+            Response response = chain.proceed(request);
+            message = String.format("Received response: %s %s\n%s", response.code(), response.message(), response.headers());
+            _context.raiseEvent(MessageEventType.create(message));
+
+            return response;
+            };
+        }
+
+    public boolean isLogTransactions()
+        {
+        return _log_transactions;
+        }
+
+    public void setLogTransactions(boolean log_transactions)
+        {
+        _log_transactions = log_transactions;
+        }
+
+    private boolean _log_transactions = false;
+    private MuseExecutionContext _context;
 
     public final static String TYPE_ID = OkHttpClientFactory.class.getAnnotation(MuseTypeId.class).value();
 
