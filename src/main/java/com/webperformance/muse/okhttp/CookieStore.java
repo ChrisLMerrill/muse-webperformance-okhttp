@@ -6,6 +6,9 @@ import org.jetbrains.annotations.*;
 import java.util.*;
 
 /**
+ * This was implemented as a temporary measure due to problems with the OkHttp UrlConnection package with
+ * classloading priveledges. Probably not needed in the future.
+ *
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
 public class CookieStore implements CookieJar

@@ -8,6 +8,7 @@ import org.musetest.core.resource.types.*;
 import org.slf4j.*;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 /**
@@ -29,7 +30,7 @@ public class OkHttpClientFactory extends BaseMuseResource
             .followRedirects(false)
             .followSslRedirects(false);
         if (_auto_cookies)
-            builder = builder.cookieJar(new CookieStore());
+            builder = builder.cookieJar(new JavaNetCookieJar(new CookieManager()));
 
         if (_log_transactions)
             {

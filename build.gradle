@@ -11,7 +11,12 @@ repositories {
 
 dependencies {
     compile 'org.musetest:muse-core:0.14'
-    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+
+    // Alert: These are compile-time dependencies. They do not need to be included with the extension packaging
+    // because they are included by the muse-selenium module. But if/when the muse-selenium module is moved from
+    // the core into a Muse extension, then these will need to be provided.
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
 
     testCompile 'junit:junit:4.12'
 }
