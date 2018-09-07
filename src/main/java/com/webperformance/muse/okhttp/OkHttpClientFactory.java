@@ -8,6 +8,7 @@ import org.musetest.core.resource.types.*;
 import org.slf4j.*;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -22,15 +23,17 @@ public class OkHttpClientFactory extends BaseMuseResource
         return new OkHttpClientResourceType();
         }
 
-    public OkHttpClient createClient(MuseExecutionContext context)
+    OkHttpClient createClient(MuseExecutionContext context)
         {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-            .cookieJar(new CookieStore())
             .followRedirects(false)
             .followSslRedirects(false);
+        if (_auto_cookies)
+            builder = builder.cookieJar(new CookieStore());
+
         if (_log_transactions)
             {
-            builder = builder.addInterceptor(createLogger());
+            builder = builder.addNetworkInterceptor(createLogger());
             _context = context;
             }
         final OkHttpClient client = builder.build();
@@ -40,8 +43,7 @@ public class OkHttpClientFactory extends BaseMuseResource
             client.connectionPool().evictAll();
             try
                 {
-                if (client.cache() != null)
-                    client.cache().close();
+                Objects.requireNonNull(client.cache()).close();
                 }
             catch (IOException e)
                 {
@@ -57,11 +59,11 @@ public class OkHttpClientFactory extends BaseMuseResource
         return chain ->
             {
             Request request = chain.request();
-            String message = String.format("Sending request: %s %s\n%s", request.method(), request.url().encodedPath(), request.headers());
+            String message = String.format("Sending request:\n%s %s\n%s", request.method(), request.url().encodedPath(), request.headers());
             _context.raiseEvent(MessageEventType.create(message));
 
             Response response = chain.proceed(request);
-            message = String.format("Received response: %s %s\n%s", response.code(), response.message(), response.headers());
+            message = String.format("Received response:\n%s %s\n%s", response.code(), response.message(), response.headers());
             _context.raiseEvent(MessageEventType.create(message));
 
             return response;
@@ -78,9 +80,21 @@ public class OkHttpClientFactory extends BaseMuseResource
         _log_transactions = log_transactions;
         }
 
+    public boolean isAutoCookies()
+        {
+        return _auto_cookies;
+        }
+
+    public void setAutoCookies(boolean auto_cookies)
+        {
+        _auto_cookies = auto_cookies;
+        }
+
     private boolean _log_transactions = false;
+    private boolean _auto_cookies = false;
     private MuseExecutionContext _context;
 
+    @SuppressWarnings("WeakerAccess")  // public API
     public final static String TYPE_ID = OkHttpClientFactory.class.getAnnotation(MuseTypeId.class).value();
 
     @SuppressWarnings("WeakerAccess")  // discovered and instantiated by reflection (see class ResourceTypes)
@@ -92,6 +106,7 @@ public class OkHttpClientFactory extends BaseMuseResource
             }
         }
 
+    @SuppressWarnings("WeakerAccess")  // public API
     public static OkHttpClient get(MuseExecutionContext context) throws MuseExecutionError
         {
         final Object client = context.getVariable(DEFAULT_CLIENT_NAME);
@@ -102,6 +117,7 @@ public class OkHttpClientFactory extends BaseMuseResource
         return (OkHttpClient) client;
         }
 
+    @SuppressWarnings("WeakerAccess")  // public API
     public final static String DEFAULT_CLIENT_NAME = "_okhttp_client";
 
     private final static Logger LOG = LoggerFactory.getLogger(OkHttpClientFactory.class);
