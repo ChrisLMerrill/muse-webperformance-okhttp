@@ -1,6 +1,7 @@
 package com.webperformance.muse.okhttp;
 
 import okhttp3.*;
+import okio.*;
 import org.musetest.core.*;
 import org.musetest.core.events.*;
 import org.musetest.core.resource.*;
@@ -32,7 +33,7 @@ public class OkHttpClientFactory extends BaseMuseResource
         if (_auto_cookies)
             builder = builder.cookieJar(new JavaNetCookieJar(new CookieManager()));
 
-        if (_log_transactions)
+        if (_log_headers)
             {
             builder = builder.addNetworkInterceptor(createLogger());
             _context = context;
@@ -61,24 +62,52 @@ public class OkHttpClientFactory extends BaseMuseResource
             {
             Request request = chain.request();
             String message = String.format("Sending request:\n%s %s\n%s", request.method(), request.url().encodedPath(), request.headers());
+            if (_log_content && request.body() != null && request.body().contentLength() > 0)
+                {
+                Request copy = request.newBuilder().build();
+                final Buffer buffer = new Buffer();
+                //noinspection ConstantConditions
+                copy.body().writeTo(buffer);
+                String body = buffer.readUtf8();
+                message += "\n" + body;
+                }
             _context.raiseEvent(MessageEventType.create(message));
 
             Response response = chain.proceed(request);
             message = String.format("Received response:\n%s %s\n%s", response.code(), response.message(), response.headers());
+            if (_log_content && response.body() != null && response.body().contentLength() > 0)
+                {
+                byte[] bytes = response.peekBody(1000).bytes();
+                String body = new String(bytes);
+                if (bytes.length == 1000)
+                    body += "...";
+                message += "\n" + body;
+                }
             _context.raiseEvent(MessageEventType.create(message));
 
             return response;
             };
         }
 
-    public boolean isLogTransactions()
+    
+    public boolean isLogHeaders()
         {
-        return _log_transactions;
+        return _log_headers;
         }
 
-    public void setLogTransactions(boolean log_transactions)
+    public void setLogHeaders(boolean log_headers)
         {
-        _log_transactions = log_transactions;
+        _log_headers = log_headers;
+        }
+
+    public boolean isLogContent()
+        {
+        return _log_content;
+        }
+
+    public void setLogContent(boolean log_content)
+        {
+        _log_content = log_content;
         }
 
     public boolean isAutoCookies()
@@ -91,7 +120,8 @@ public class OkHttpClientFactory extends BaseMuseResource
         _auto_cookies = auto_cookies;
         }
 
-    private boolean _log_transactions = false;
+    private boolean _log_headers = false;
+    private boolean _log_content = false;
     private boolean _auto_cookies = false;
     private MuseExecutionContext _context;
 
