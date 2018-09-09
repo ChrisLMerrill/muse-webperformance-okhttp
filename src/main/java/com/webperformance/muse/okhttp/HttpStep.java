@@ -46,8 +46,8 @@ public abstract class HttpStep extends BaseStep
         client = (OkHttpClient) client_object;
 
         Request.Builder builder = createBuilder(url);
-        addHeaders(context, builder);
-        addBody(context, builder);
+        builder = addHeaders(context, builder);
+        builder = addBody(context, builder);
 
         Request request = builder.build();
         Result result = new Result();
@@ -73,21 +73,22 @@ public abstract class HttpStep extends BaseStep
         }
 
     @SuppressWarnings("WeakerAccess") // available for subclasses
-    protected void addHeaders(StepExecutionContext context, Request.Builder builder) throws org.musetest.core.values.ValueSourceResolutionError
+    protected Request.Builder addHeaders(StepExecutionContext context, Request.Builder builder) throws org.musetest.core.values.ValueSourceResolutionError
         {
         if (_headers_source != null)
             {
             List<Pair<Object, Object>> headers = getValue(_headers_source, context, true, List.class);
             if (headers != null)
                 for (Pair<Object, Object> header : headers)
-                    builder.addHeader(header.getFirst().toString(), header.getSecond().toString());
+                    builder = builder.addHeader(header.getFirst().toString(), header.getSecond().toString());
             }
+        return builder;
         }
 
     @SuppressWarnings({"WeakerAccess", "RedundantThrows", "unused"}) // available for subclasses
-    protected void addBody(StepExecutionContext context, Request.Builder builder) throws ValueSourceResolutionError
+    protected Request.Builder addBody(StepExecutionContext context, Request.Builder builder) throws ValueSourceResolutionError
         {
-        // no-op
+        return builder;  // no-op for methods without a body
         }
 
     @SuppressWarnings("WeakerAccess") // available for subclasses
