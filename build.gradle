@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-version = 0.2
+version = 0.3
 group = 'com.webperformance.muse'
 
 repositories {
@@ -44,4 +44,8 @@ jar {
     manifest {
         attributes 'muse-package' : 'com.webperformance.muse.okhttp'
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.9'
 }
