@@ -27,6 +27,7 @@ import java.util.*;
 @MuseSubsourceDescriptor(displayName = "Result name", description = "Name of the variable to store the result in. Default is 'result'.", type = SubsourceDescriptor.Type.Named, name = HttpStep.RESULT_NAME_PARAM, optional = true)
 @MuseSubsourceDescriptor(displayName = "Client", description = "The HTTP Client to use. Default is '#\"_http_client\"'.", type = SubsourceDescriptor.Type.Named, name = HttpStep.CLIENT_PARAM, optional = true)
 @MuseSubsourceDescriptor(displayName = "Body", description = "The list of fields to send as the body of the post", type = SubsourceDescriptor.Type.Named, name = PostFormStep.BODY_PARAM, optional = true)
+@MuseSubsourceDescriptor(displayName = "Encode parameters", description = "If true, apply URL encoding to each field name and value.", type = SubsourceDescriptor.Type.Named, name = PostFormStep.ENCODE_PARAM, optional = true, defaultValue = "true")
 @SuppressWarnings("unused")
 public class PostFormStep extends HttpStep
     {
@@ -35,12 +36,20 @@ public class PostFormStep extends HttpStep
         {
         super(configuration, project);
         _body_source = getValueSource(configuration, BODY_PARAM, false, project);
+        _encode_source = getValueSource(configuration, ENCODE_PARAM, false, project);
         }
 
     @Override
     protected Request.Builder addBody(StepExecutionContext context, Request.Builder builder) throws ValueSourceResolutionError
         {
         FormBody.Builder body_builder = new FormBody.Builder();
+        Boolean encode = false;
+        if (_encode_source != null)
+            {
+            Boolean value = getValue(_encode_source, context, true, Boolean.class);
+            if (value != null)
+                encode = value;
+            }
 
         if (_body_source != null)
             {
@@ -48,7 +57,12 @@ public class PostFormStep extends HttpStep
             if (fields != null)
                 {
                 for (Pair field : fields)
-                    body_builder = body_builder.add(field.getFirst().toString(), field.getSecond().toString());
+                    {
+                    if (encode)
+                        body_builder = body_builder.add(field.getFirst().toString(), field.getSecond().toString());
+                    else
+                        body_builder = body_builder.addEncoded(field.getFirst().toString(), field.getSecond().toString());
+                    }
                 }
             }
 
@@ -57,8 +71,10 @@ public class PostFormStep extends HttpStep
         }
 
     private final MuseValueSource _body_source;
+    private final MuseValueSource _encode_source;
 
     public final static String BODY_PARAM = "body";
+    public final static String ENCODE_PARAM = "encode";
     @SuppressWarnings("unused")
     public final static String TYPE_ID = PostFormStep.class.getAnnotation(MuseTypeId.class).value();
     }
