@@ -107,5 +107,5 @@ public abstract class HttpStep extends BaseStep
     public final static String HEADERS_PARAM = "headers";
     final static String RESULT_NAME_PARAM = "response";
     final static String CLIENT_PARAM = "client";
-    private final static String DEFAULT_RESULT_NAME = "result";
+    final static String DEFAULT_RESULT_NAME = "result";
     }
