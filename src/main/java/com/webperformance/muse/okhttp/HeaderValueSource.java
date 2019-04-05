@@ -53,7 +53,7 @@ public class HeaderValueSource extends BaseValueSource
     private MuseValueSource _header_name_source;
     private MuseValueSource _result_name_source;
 
-    private final static String TYPE_ID = HeaderValueSource.class.getAnnotation(MuseTypeId.class).value();
+    public final static String TYPE_ID = HeaderValueSource.class.getAnnotation(MuseTypeId.class).value();
 
     @SuppressWarnings("unused")  // instantiated via reflection
     public static class HeaderValueSourceStringExpressionSupport extends BaseArgumentedValueSourceStringSupport
