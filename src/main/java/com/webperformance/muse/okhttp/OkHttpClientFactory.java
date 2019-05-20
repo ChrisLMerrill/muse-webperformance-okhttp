@@ -74,14 +74,20 @@ public class OkHttpClientFactory extends BaseMuseResource
             _context.raiseEvent(MessageEventType.create(message));
 
             Response response = chain.proceed(request);
-            message = String.format("Received response:\n%s %s\n%s", response.code(), response.message(), response.headers());
-            if (_log_content && response.body() != null && response.body().contentLength() > 0)
+            message = String.format("Received response:\n%s %s (%s)\n%s", response.code(), response.message(), response.protocol(), response.headers());
+
+            if (_log_content)
                 {
-                byte[] bytes = response.peekBody(1000).bytes();
-                String body = new String(bytes);
-                if (bytes.length == 1000)
-                    body += "...";
-                message += "\n" + body;
+                String response_content = null;
+                if (response.body() != null)
+                    response_content = response.body().string();
+
+                if (response_content != null && response_content.length() > 0)
+                    {
+                    if (response_content.length() > 1000)
+                        response_content = response_content.substring(0, 1000) + "...";
+                    message += "\n" + response_content;
+                    }
                 }
             _context.raiseEvent(MessageEventType.create(message));
 
