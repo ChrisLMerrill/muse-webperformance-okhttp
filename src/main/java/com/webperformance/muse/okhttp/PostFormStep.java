@@ -23,7 +23,7 @@ import java.util.*;
 @MuseStepShortDescription("POST a list of form fields to the URL")
 @MuseStepLongDescription("The 'url' source is resolved to a string and used to post an update to a resource via HTTP")
 @MuseSubsourceDescriptor(displayName = "URL", description = "URL to post to", type = SubsourceDescriptor.Type.Named, name = HttpStep.URL_PARAM)
-@MuseSubsourceDescriptor(displayName = "Headers", description = "Headers to send", type = SubsourceDescriptor.Type.List, name = HttpStep.HEADERS_PARAM, optional = true)
+@MuseSubsourceDescriptor(displayName = "Headers", description = "Headers to send", type = SubsourceDescriptor.Type.Named, name = HttpStep.HEADERS_PARAM, optional = true)
 @MuseSubsourceDescriptor(displayName = "Result name", description = "Name of the variable to store the result in. Default is 'result'.", type = SubsourceDescriptor.Type.Named, name = HttpStep.RESULT_NAME_PARAM, optional = true)
 @MuseSubsourceDescriptor(displayName = "Client", description = "The HTTP Client to use. Default is '#\"_http_client\"'.", type = SubsourceDescriptor.Type.Named, name = HttpStep.CLIENT_PARAM, optional = true)
 @MuseSubsourceDescriptor(displayName = "Body", description = "The list of fields to send as the body of the post", type = SubsourceDescriptor.Type.Named, name = PostFormStep.BODY_PARAM, optional = true)
