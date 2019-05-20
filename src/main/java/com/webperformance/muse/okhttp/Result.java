@@ -10,6 +10,12 @@ public class Result
     public boolean success;
     public String failure_message;
     public Response response;
+    public Request request;
+
+    public Result(Request request)
+        {
+        this.request = request;
+        }
 
     @Override
     public String toString()

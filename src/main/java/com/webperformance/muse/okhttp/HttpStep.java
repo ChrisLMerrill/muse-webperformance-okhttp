@@ -38,19 +38,17 @@ public abstract class HttpStep extends BaseStep
         else
             result_name = getValue(_result_name_source, context, false, String.class);
 
-        Object client_object;
         if (_client_source == null)
-            client_object = OkHttpClientFactory.get(context);
+            client = OkHttpClientFactory.get(context);
         else
-            client_object = getValue(_client_source, context, false, OkHttpClient.class);
-        client = (OkHttpClient) client_object;
+            client = getValue(_client_source, context, false, OkHttpClient.class);
 
         Request.Builder builder = createBuilder(url);
         builder = addHeaders(context, builder);
         builder = addBody(context, builder);
 
         Request request = builder.build();
-        Result result = new Result();
+        Result result = new Result(request);
         try
             {
             result.success = true;
