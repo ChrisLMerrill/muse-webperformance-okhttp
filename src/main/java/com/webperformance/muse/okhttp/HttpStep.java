@@ -49,12 +49,14 @@ public abstract class HttpStep extends BaseStep
 
         Request request = builder.build();
         Result result = new Result(request);
+        Response response = null;
         try
             {
             result.success = true;
-            result.response = client.newCall(request).execute();
+            response = client.newCall(request).execute();
+            result.response = new HttpResponse(response); // this reads the response body!
             context.setVariable(result_name, result);
-            return new BasicStepExecutionResult(StepExecutionStatus.COMPLETE, String.format("HTTP %s result (%s) stored in #%s", request.method(), result.response.code() + " " + result.response.message(), result_name));
+            return new BasicStepExecutionResult(StepExecutionStatus.COMPLETE, String.format("HTTP %s result (%s) stored in #%s", request.method(), result.response.status() + " " + result.response.message(), result_name));
             }
         catch (IOException e)
             {
@@ -65,8 +67,8 @@ public abstract class HttpStep extends BaseStep
             }
         finally
             {
-            if (result.response != null)
-                result.response.close();
+            if (response != null)
+                response.close();
             }
         }
 

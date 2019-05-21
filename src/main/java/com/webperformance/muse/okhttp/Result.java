@@ -7,9 +7,13 @@ import okhttp3.*;
  */
 public class Result
     {
+    @SuppressWarnings("WeakerAccess")  // exposed for access from the test context
     public boolean success;
+    @SuppressWarnings("WeakerAccess")  // exposed for access from the test context
     public String failure_message;
-    public Response response;
+    @SuppressWarnings("WeakerAccess")  // exposed for access from the test context
+    public HttpResponse response;
+    @SuppressWarnings("WeakerAccess")  // exposed for access from the test context
     public Request request;
 
     public Result(Request request)
@@ -21,7 +25,7 @@ public class Result
     public String toString()
         {
         if (success)
-            return response.code() + " " + response.message();
+            return response.status() + " " + response.message();
         else
             return failure_message;
         }
