@@ -11,6 +11,7 @@ import org.slf4j.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -29,7 +30,10 @@ public class OkHttpClientFactory extends BaseMuseResource
         {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .followRedirects(false)
-            .followSslRedirects(false);
+            .followSslRedirects(false)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(120, TimeUnit.SECONDS);
+
         if (_auto_cookies)
             builder = builder.cookieJar(new JavaNetCookieJar(new CookieManager()));
 
