@@ -15,8 +15,9 @@ public class HttpResponse
     public HttpResponse(Response response) throws IOException
         {
         _response = response;
-        if (_response.body() != null)
-            _body_bytes = _response.body().bytes();
+        ResponseBody body = _response.body();
+        if (body != null)
+            _body_bytes = body.bytes();
         else
             _body_bytes = null;
         }

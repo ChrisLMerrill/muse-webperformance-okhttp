@@ -10,7 +10,7 @@ import org.slf4j.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
+import java.nio.charset.*;
 import java.util.concurrent.*;
 
 /**
@@ -49,7 +49,8 @@ public class OkHttpClientFactory extends BaseMuseResource
             client.connectionPool().evictAll();
             try
                 {
-                Objects.requireNonNull(client.cache()).close();
+                if (client.cache() != null)
+                    client.cache().close();
                 }
             catch (IOException e)
                 {
@@ -82,15 +83,28 @@ public class OkHttpClientFactory extends BaseMuseResource
 
             if (_log_content)
                 {
-                String response_content = null;
-                if (response.body() != null)
-                    response_content = response.body().string();
-
-                if (response_content != null && response_content.length() > 0)
+                ResponseBody body = response.body();
+                if (body != null)
                     {
-                    if (response_content.length() > 1000)
-                        response_content = response_content.substring(0, 1000) + "...";
-                    message += "\n" + response_content;
+                    BufferedSource source = body.source();
+                    source.request(Long.MAX_VALUE);  // requeset all
+                    Buffer buffer = source.buffer();
+                    Charset charset = StandardCharsets.UTF_8;
+                    MediaType content_type = body.contentType();
+                    if (content_type != null)
+                        {
+                        Charset cs = content_type.charset();
+                        if (cs != null)
+                            charset = cs;
+                        }
+
+                    String response_content = buffer.clone().readString(charset);
+                    if (response_content.length() > 0)
+                        {
+                        if (response_content.length() > 1000)
+                            response_content = response_content.substring(0, 1000) + "...";
+                        message += "\n" + response_content;
+                        }
                     }
                 }
             _context.raiseEvent(MessageEventType.create(message));

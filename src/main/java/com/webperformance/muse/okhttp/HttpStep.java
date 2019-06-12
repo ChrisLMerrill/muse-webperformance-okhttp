@@ -54,11 +54,11 @@ public abstract class HttpStep extends BaseStep
             {
             result.success = true;
             response = client.newCall(request).execute();
-            result.response = new HttpResponse(response); // this reads the response body!
+            result.response = new HttpResponse(response); // This reads the response body! After that, the body can't be accessed again.
             context.setVariable(result_name, result);
             return new BasicStepExecutionResult(StepExecutionStatus.COMPLETE, String.format("HTTP %s result (%s) stored in #%s", request.method(), result.response.status() + " " + result.response.message(), result_name));
             }
-        catch (IOException e)
+        catch (IllegalStateException | IOException e)
             {
             result.success = false;
             result.failure_message = e.getMessage();
