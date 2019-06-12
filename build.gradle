@@ -10,7 +10,8 @@ repositories {
 }
 
 dependencies {
-    compile 'org.musetest:muse-core:0.14'
+    compile 'org.musetest:muse-core:0.15'
+    testCompile 'org.musetest:muse-commandline:0.15'  // only needed for debugging via command-line execution
 
     // Alert: These are compile-time dependencies. They do not need to be included with the extension packaging
     // because they are included by the muse-selenium module. But if/when the muse-selenium module is moved from
