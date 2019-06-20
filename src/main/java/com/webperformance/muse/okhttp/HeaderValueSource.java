@@ -16,7 +16,7 @@ import org.musetest.core.values.descriptor.*;
 @MuseValueSourceLongDescription("Resolves the {name} source. Returns the value of the header or null if it does not exist.")
 @MuseStringExpressionSupportImplementation(HeaderValueSource.HeaderValueSourceStringExpressionSupport.class)
 @MuseSubsourceDescriptor(displayName = "Header Name", description = "Name of the cookie to get", type = SubsourceDescriptor.Type.Single)
-@MuseSubsourceDescriptor(displayName = "Result Name", description = "Name of the variable that the HTTP transaction result is stored in (if not the default)", name = "result", type = SubsourceDescriptor.Type.Named, optional = true)
+@MuseSubsourceDescriptor(displayName = "Result Name", description = "Name of the variable that the HTTP transaction result is stored in (if not the default)", name = "result", type = SubsourceDescriptor.Type.Named, optional = true, defaultValue = HttpStep.DEFAULT_RESULT_NAME)
 @SuppressWarnings("unused")  // discovered via reflection
 public class HeaderValueSource extends BaseValueSource
     {
