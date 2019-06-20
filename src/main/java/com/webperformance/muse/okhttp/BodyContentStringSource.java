@@ -47,7 +47,7 @@ public class BodyContentStringSource extends BaseValueSource
     @Override
     public String getDescription()
         {
-        return "bodyContentAsString()";
+        return "bodyAsString()";
         }
 
     private MuseValueSource _result_name_source;
