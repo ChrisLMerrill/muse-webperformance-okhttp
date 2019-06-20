@@ -1,6 +1,6 @@
 package com.webperformance.muse.okhttp;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.musetest.core.*;
 import org.musetest.core.context.*;
 import org.musetest.core.project.*;
@@ -23,10 +23,10 @@ public class GetStepTests
         final DefaultSteppedTestExecutionContext step_test_context = new DefaultSteppedTestExecutionContext(_project, new SteppedTest(config));
         final SingleStepExecutionContext step_context = new SingleStepExecutionContext(step_test_context, config, false);
         final StepExecutionResult result = step.executeImplementation(step_context);
-        Assert.assertEquals(StepExecutionStatus.FAILURE, result.getStatus());
-        Assert.assertNotNull(step_test_context.getVariable("result"));
-        Assert.assertNotNull(step_context.getVariable("result"));
-        Assert.assertNotNull(step_test_context.getVariable("result"));
+        Assertions.assertEquals(StepExecutionStatus.FAILURE, result.getStatus());
+        Assertions.assertNotNull(step_test_context.getVariable("result"));
+        Assertions.assertNotNull(step_context.getVariable("result"));
+        Assertions.assertNotNull(step_test_context.getVariable("result"));
         }
 
     @Test
@@ -39,10 +39,10 @@ public class GetStepTests
         final DefaultSteppedTestExecutionContext step_test_context = new DefaultSteppedTestExecutionContext(_project, new SteppedTest(config));
         final SingleStepExecutionContext step_context = new SingleStepExecutionContext(step_test_context, config, false);
         final StepExecutionResult result = step.executeImplementation(step_context);
-        Assert.assertEquals(StepExecutionStatus.COMPLETE, result.getStatus());
+        Assertions.assertEquals(StepExecutionStatus.COMPLETE, result.getStatus());
         String body1 = ((Result) step_test_context.getVariable(HttpStep.DEFAULT_RESULT_NAME)).response.bodyText();
         String body2 = ((Result) step_test_context.getVariable(HttpStep.DEFAULT_RESULT_NAME)).response.bodyText();
-        Assert.assertSame(body1, body2);
+        Assertions.assertSame(body1, body2);
         }
 
     private SimpleProject _project = new SimpleProject();
