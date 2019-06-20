@@ -18,6 +18,7 @@ dependencies {
     // the core into a Muse extension, then these will need to be provided.
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
+    implementation 'org.jsoup:jsoup:1.12.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5+'
 }

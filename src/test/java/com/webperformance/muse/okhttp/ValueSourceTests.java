@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.musetest.core.*;
 import org.musetest.core.context.*;
 import org.musetest.core.project.*;
+import org.musetest.core.resource.*;
 import org.musetest.core.values.*;
 
 import java.io.*;
@@ -11,10 +12,10 @@ import java.io.*;
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-public class ValueSourceTests
+class ValueSourceTests
     {
     @Test
-    public void bodyContentAsString() throws MuseExecutionError, IOException
+    void bodyContentAsString() throws MuseExecutionError, IOException
         {
         final String body_text = "this is the response body";
         MockHttpResponse response = new MockHttpResponse(body_text);
@@ -29,5 +30,19 @@ public class ValueSourceTests
         MuseValueSource source = new BodyContentStringSource(source_config, project);
         Object value = source.resolveValue(context);
         Assertions.assertEquals(body_text, value.toString());
+        }
+
+    @Test
+    void htmlDecode() throws MuseInstantiationException, ValueSourceResolutionError
+        {
+        final String encoded = "&quot;value&quot;";
+        final String decoded = "\"value\"";
+
+        ValueSourceConfiguration config = ValueSourceConfiguration.forType(HtmlDecoderSource.TYPE_ID);
+        config.setSource(ValueSourceConfiguration.forValue(encoded));
+        SimpleProject project = new SimpleProject();
+        MuseValueSource source = new HtmlDecoderSource(config, project);
+        String value = source.resolveValue(new ProjectExecutionContext(project)).toString();
+        Assertions.assertEquals(decoded, value);
         }
     }
