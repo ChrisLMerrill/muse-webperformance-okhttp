@@ -1,12 +1,12 @@
 package com.webperformance.muse.okhttp;
 
-import kotlin.*;
 import okhttp3.*;
 import org.musetest.core.*;
 import org.musetest.core.context.*;
 import org.musetest.core.resource.*;
 import org.musetest.core.step.*;
 import org.musetest.core.values.*;
+import org.musetest.builtins.value.*;
 
 import java.io.*;
 import java.util.*;
@@ -77,10 +77,10 @@ public abstract class HttpStep extends BaseStep
         {
         if (_headers_source != null)
             {
-            List<Pair<Object, Object>> headers = getValue(_headers_source, context, true, List.class);
+            List<NameValuePair> headers = getValue(_headers_source, context, true, List.class);
             if (headers != null)
-                for (Pair<Object, Object> header : headers)
-                    builder = builder.addHeader(header.getFirst().toString(), header.getSecond().toString());
+                for (NameValuePair header : headers)
+                    builder = builder.addHeader(header.getName(), header.getValue().toString());
             }
         return builder;
         }

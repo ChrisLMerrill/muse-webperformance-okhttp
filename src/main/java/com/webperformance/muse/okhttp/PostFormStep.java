@@ -1,7 +1,7 @@
 package com.webperformance.muse.okhttp;
 
-import kotlin.*;
 import okhttp3.*;
+import org.musetest.builtins.value.*;
 import org.musetest.core.*;
 import org.musetest.core.context.*;
 import org.musetest.core.resource.*;
@@ -53,15 +53,15 @@ public class PostFormStep extends HttpStep
 
         if (_body_source != null)
             {
-            List<Pair> fields = getValue(_body_source, context, true, List.class);
+            List<NameValuePair> fields = getValue(_body_source, context, true, List.class);
             if (fields != null)
                 {
-                for (Pair field : fields)
+                for (NameValuePair field : fields)
                     {
                     if (encode)
-                        body_builder = body_builder.add(field.getFirst().toString(), field.getSecond().toString());
+                        body_builder = body_builder.add(field.getName(), field.getValue().toString());
                     else
-                        body_builder = body_builder.addEncoded(field.getFirst().toString(), field.getSecond().toString());
+                        body_builder = body_builder.addEncoded(field.getName(), field.getValue().toString());
                     }
                 }
             }
